@@ -1,0 +1,42 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    strategy:
+      fail-fast: false
+      matrix:
+        linter: [
+          {"name": "tests-flake8", "format": "flake8", "cwd": ".", "cmd": "flake8 tests"},
+          {"name": "tests-mypy", "format": "mypy", "cwd": ".", "cmd": "mypy tests"},
+          {"name": "tests-pylint", "format": "pylint-json", "cwd": ".", "cmd": "pylint --load-plugins pylint_pytest $(Get-ChildItem -Filter *.py -Recurse tests)"},
+          {"name": "eslint", "format": "eslint-unix", "cwd": "bugalua", "cmd": "node_modules\\.bin\\eslint.ps1 --format=unix ."},
+        ]
+    name: ${{ matrix.linter.name }}
+    runs-on: windows-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    - name: Install Python dependencies
+      run: |
+        py -m pip install --upgrade pip
+        py -m pip install -r tests\dev-requirements.txt
+        py -m pip install git+https://github.com/bugale/Bugalintly.git@bugalintly
+    - name: Install Node.JS dependencies
+      run: |
+        cd bugalua
+        npm install .
+    - name: Lint
+      run: |
+        cd ${{ matrix.linter.cwd }}
+        ${{ matrix.linter.cmd }} > lint.log
+        $exitcode = $LASTEXITCODE
+        type lint.log | Lintly --log --no-request-changes --no-review-body --base-dir .. --format=${{ matrix.linter.format }} --comment-tag=${{ matrix.linter.name }}
+        exit $exitcode
+      env:
+        LINTLY_API_KEY: ${{ secrets.GITHUB_TOKEN }}
