@@ -1,0 +1,22 @@
+{
+  "name": "bugalua",
+  "version": "0.0.1",
+  "main": "bugalua.js",
+  "devDependencies": {
+    "eslint": "*",
+    "eslint-config-airbnb": "*"
+  },
+  "eslintConfig": {
+    "extends": [ "airbnb" ],
+    "rules": {
+      "strict": "off",
+      "linebreak-style": "off",
+      "max-classes-per-file": "off",
+      "no-unused-vars": ["error", { "varsIgnorePattern": "^exports$" }],
+      "new-cap": "off",
+      "no-plusplus": "off",
+      "radix": "off"
+    },
+    "globals": { "host": "readonly" }
+  }
+}
