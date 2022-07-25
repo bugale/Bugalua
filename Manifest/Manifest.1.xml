@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ExtensionPackages Version='1.0.0.0' Compression='none'>
+    <ExtensionPackage>
+        <Name>Bugalua</Name>
+        <Version>1.0.0.0</Version>
+        <Description>Lua debugging extension</Description>
+        <Components>
+            <ScriptComponent Name='Bugalua' Type='Engine' File='..\bugalua\bugalua.js' FilePathKind='RepositoryRelative'>
+                <FunctionAliases>
+                    <FunctionAlias Name='lua'>
+                        <AliasItem>
+                            <Syntax>
+                                <![CDATA[!lua <address>]]>
+                            </Syntax>
+                            <Description>
+                                <![CDATA[Lua state inspection.]]>
+                            </Description>
+                        </AliasItem>
+                    </FunctionAlias>
+                </FunctionAliases>
+            </ScriptComponent>
+        </Components>
+    </ExtensionPackage>
+</ExtensionPackages>
